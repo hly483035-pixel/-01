@@ -18,56 +18,58 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
+            overflow: hidden;
             position: relative;
         }
 
-        /* حاوية الأشكال والرسائل */
-        .container {
-            width: 90%;
-            max-width: 600px;
-            text-align: center;
-            z-index: 10;
-            padding: 20px;
-        }
-
-        /* القلوب التي تدور وتتجمع */
+        /* القلوب التي تحوم وتدور عشوائياً */
         .heart-particle {
             position: absolute;
             color: #ff4d6d;
-            font-size: 20px;
+            font-size: 22px;
             pointer-events: none;
-            transition: transform 3s ease-in-out, left 3s ease-in-out, top 3s ease-in-out, opacity 1s;
+            transition: left 3.5s ease-in-out, top 3.5s ease-in-out, transform 3.5s ease-in-out;
+            z-index: 1;
         }
 
-        @keyframes spinRandom {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.2); }
-            100% { transform: rotate(360deg) scale(1); }
+        /* حاوية البطاقة */
+        .container {
+            width: 90%;
+            max-width: 550px;
+            text-align: center;
+            z-index: 10;
+            padding: 15px;
         }
 
-        .spinning {
-            animation: spinRandom 2s infinite linear;
-        }
-
-        /* بطاقة الرسالة */
         .card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
             padding: 30px 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.25);
             border: 2px solid #ffb3c1;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1.5s ease, transform 1.5s ease;
+            transform: scale(0.9);
+            transition: all 1s ease;
             pointer-events: none;
         }
 
         .card.show {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1);
             pointer-events: auto;
+        }
+
+        /* الشاشات/المراحل */
+        .step {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .step.active {
+            display: block;
+            opacity: 1;
         }
 
         .message-text {
@@ -79,43 +81,71 @@
             font-weight: 600;
         }
 
-        /* الأزرار والتفاعلات */
+        .question-text {
+            color: #800f2f;
+            font-size: 1.35rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* الأزرار */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            min-height: 50px;
+        }
+
         .btn {
             background: linear-gradient(135deg, #ff4d6d, #ff758f);
             color: white;
             border: none;
-            padding: 12px 28px;
-            font-size: 1rem;
+            padding: 12px 32px;
+            font-size: 1.1rem;
             font-weight: bold;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
             transition: all 0.3s ease;
-            margin: 8px;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.45);
         }
 
-        .step-section {
+        .btn-no {
+            background: #a8a8a8;
+            position: relative;
+        }
+
+        /* كانفاس رسم الوردة */
+        #flower-canvas {
             display: none;
-            opacity: 0;
-            transition: opacity 0.8s ease;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
         }
 
-        .step-section.active {
-            display: block;
-            opacity: 1;
-        }
-
-        .final-text {
-            color: #800f2f;
-            font-size: 1.25rem;
+        .final-love-text {
+            display: none;
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
             font-weight: bold;
-            margin-top: 15px;
-            line-height: 1.6;
+            color: #c9184a;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 77, 109, 0.5);
+            z-index: 25;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -125,97 +155,237 @@
 
     <div class="container">
         <div class="card" id="mainCard">
-            <!-- النص الأصلي -->
-            <div class="message-text">
+            
+            <!-- الخطوة 1: الرسالة الأصلية + أكلمت القراءة -->
+            <div id="step1" class="step active">
+                <div class="message-text">
 مهما ثقلت الدنيا عليج ومهما جانت قوية ف لا تنسين انو انتي مو وحدج ابد وياج رب العالمين واني من بعده هم وياج بأي وقت تحتاجين بيه شيء رأسا كليلي اني ويا اختي ع الدنيا كلها وياج حتى بالباطل قبل الحق احبج هوايه والله يريحج ويبعد عنج كل ضوجه وحزن يارب وينطيج القوه وابد لا تنسين لو العالم كله عافج ف اني موجود وياج حتلو جنت مو بالحياة ف اني وياج هم ♥️🌹
+                </div>
+                <button class="btn" onclick="goToStep(2)">أكملت القراءة</button>
             </div>
 
-            <!-- المرحلة الأولى: زر أكلمت القراءة -->
-            <div id="step1" class="step-section active">
-                <button class="btn" onclick="nextStep(2)">أكملت القراءة</button>
+            <!-- الخطوة 2: احنا اقوياء ؟ + صح -->
+            <div id="step2" class="step">
+                <div class="question-text">احنا اقوياء ؟</div>
+                <button class="btn" onclick="goToStep(3)">صح</button>
             </div>
 
-            <!-- المرحلة الثانية: زر احنا اقوياء وخيار صح -->
-            <div id="step2" class="step-section">
-                <button class="btn" onclick="nextStep(3)">احنا اقوياء</button>
-                <button class="btn" onclick="nextStep(3)">صح ؟</button>
-            </div>
-
-            <!-- المرحلة الثالثة: النص النهائي -->
-            <div id="step3" class="step-section">
-                <div class="final-text">
+            <!-- الخطوة 3: خلينا سوه ع الدنيا وهمها -->
+            <div id="step3" class="step">
+                <div class="question-text">
                     اذن مادام احنا اقوياء ورب العالمين ويانا خلينا سوه ع الدنيا وهمها 🫂❤️‍🩹
                 </div>
+                <button class="btn" onclick="goToStep(4)">التالي</button>
             </div>
+
+            <!-- الخطوة 4: تردين ورده ؟ + نعم ولا -->
+            <div id="step4" class="step">
+                <div class="question-text">تردين ورده ؟ 🌹</div>
+                <div class="btn-container">
+                    <button class="btn" onclick="goToStep(5)">نعم</button>
+                    <button class="btn btn-no" id="noBtn" onmouseover="moveNoBtn()" onclick="moveNoBtn()">لا</button>
+                </div>
+            </div>
+
+            <!-- الخطوة 5: نو نوو نو الورده ببوسه + امححح -->
+            <div id="step5" class="step">
+                <div class="question-text">نو نوو نو الورده ببوسه 💋</div>
+                <button class="btn" onclick="startFlowerDrawing()">امححح</button>
+            </div>
+
         </div>
     </div>
 
+    <!-- رسم الوردة والرسالة الأخيرة -->
+    <canvas id="flower-canvas" width="400" height="500"></canvas>
+    <div class="final-love-text" id="finalLoveText">احبج يا شطورتي ❤️🌹</div>
+
     <script>
         const canvas = document.getElementById('heart-canvas');
-        const totalHearts = 60;
+        const totalHearts = 70;
         const hearts = [];
 
-        // إنشاء القلوب العشوائية
+        // إنشاء القلوب
         for (let i = 0; i < totalHearts; i++) {
             const heart = document.createElement('div');
-            heart.classList.add('heart-particle', 'spinning');
+            heart.classList.add('heart-particle');
             heart.innerHTML = '♥️';
             
-            // مواقع عشوائية أولية
-            const startX = Math.random() * window.innerWidth;
-            const startY = Math.random() * window.innerHeight;
+            const startX = Math.random() * (window.innerWidth - 30);
+            const startY = Math.random() * (window.innerHeight - 30);
             
             heart.style.left = startX + 'px';
             heart.style.top = startY + 'px';
-            heart.style.animationDuration = (1 + Math.random() * 2) + 's';
             
             canvas.appendChild(heart);
             hearts.push(heart);
         }
 
-        // معادلة رسم القلب الكبير
-        function getHeartPosition(t) {
-            const scale = 12; // حجم القلب الكبير
-            const x = 16 * Math.pow(Math.sin(t), 3);
-            const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-            return {
-                x: x * scale,
-                y: y * scale
-            };
+        // حركة دوران وتجول عشوائية للقلوب
+        function moveHeartsRandomly() {
+            hearts.forEach(heart => {
+                const randomX = Math.random() * (window.innerWidth - 40);
+                const randomY = Math.random() * (window.innerHeight - 40);
+                const randomAngle = Math.random() * 720 - 360;
+                
+                heart.style.left = randomX + 'px';
+                heart.style.top = randomY + 'px';
+                heart.style.transform = `rotate(${randomAngle}deg) scale(${0.8 + Math.random() * 0.6})`;
+            });
         }
 
-        // بعد 3 ثواني: يتوقف الدوران وتتجمع القلوب لتشكل قلبًا كبيرًا
+        moveHeartsRandomly();
+        const randomInterval = setInterval(moveHeartsRandomly, 3000);
+
+        // شكل القلب الكبير
+        function getHeartPosition(t) {
+            const scale = 11;
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+            return { x: x * scale, y: y * scale };
+        }
+
+        // تجمع القلوب لتكوين القلب الكبير
         setTimeout(() => {
+            clearInterval(randomInterval);
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2 - 20;
 
             hearts.forEach((heart, index) => {
-                heart.classList.remove('spinning');
                 const t = (index / totalHearts) * 2 * Math.PI;
                 const pos = getHeartPosition(t);
 
                 heart.style.left = (centerX + pos.x) + 'px';
                 heart.style.top = (centerY + pos.y) + 'px';
-                heart.style.transform = 'scale(1.3)';
+                heart.style.transform = 'rotate(0deg) scale(1.2)';
             });
 
-            // بعد اكتمال تجمع القلب الكبير، تظهر البطاقة مع النص
             setTimeout(() => {
                 document.getElementById('mainCard').classList.add('show');
-            }, 3000);
+            }, 3500);
 
-        }, 3000);
+        }, 5000);
 
-        // التبديل بين خطوات الأزرار
-        function nextStep(stepNumber) {
-            document.querySelectorAll('.step-section').forEach(sec => {
-                sec.classList.remove('active');
-            });
+        // التبديل بين الشاشات
+        function goToStep(stepNumber) {
+            const currentActive = document.querySelector('.step.active');
+            currentActive.style.opacity = '0';
             
             setTimeout(() => {
-                const currentStep = document.getElementById('step' + stepNumber);
-                currentStep.classList.add('active');
-            }, 300);
+                currentActive.classList.remove('active');
+                
+                const nextStep = document.getElementById('step' + stepNumber);
+                nextStep.classList.add('active');
+                setTimeout(() => {
+                    nextStep.style.opacity = '1';
+                }, 50);
+            }, 500);
+        }
+
+        // جعل زر "لا" يهرب بشكل فكاهي
+        function moveNoBtn() {
+            const btn = document.getElementById('noBtn');
+            const x = Math.random() * 140 - 70;
+            const y = Math.random() * 80 - 40;
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        // رسم الوردة بالأنيميشن
+        function startFlowerDrawing() {
+            document.getElementById('mainCard').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('mainCard').style.display = 'none';
+                
+                const fCanvas = document.getElementById('flower-canvas');
+                fCanvas.style.display = 'block';
+                const ctx = fCanvas.getContext('2d');
+
+                let progress = 0;
+
+                function draw() {
+                    ctx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+                    
+                    // 1. رسم الساق الأخضر
+                    if (progress > 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(200, 450);
+                        let stemY = 450 - (progress * 2.2);
+                        if (stemY < 230) stemY = 230;
+                        ctx.quadraticCurveTo(190, 350, 200, stemY);
+                        ctx.strokeStyle = '#2b9348';
+                        ctx.lineWidth = 8;
+                        ctx.lineCap = 'round';
+                        ctx.stroke();
+                    }
+
+                    // 2. رسم الأوراق الخضراء
+                    if (progress > 30) {
+                        ctx.beginPath();
+                        ctx.moveTo(195, 340);
+                        ctx.quadraticCurveTo(130, 310, 140, 350);
+                        ctx.quadraticCurveTo(170, 370, 195, 340);
+                        ctx.fillStyle = '#55a630';
+                        ctx.fill();
+
+                        ctx.beginPath();
+                        ctx.moveTo(205, 310);
+                        ctx.quadraticCurveTo(270, 280, 260, 320);
+                        ctx.quadraticCurveTo(230, 340, 205, 310);
+                        ctx.fillStyle = '#55a630';
+                        ctx.fill();
+                    }
+
+                    // 3. رسم بتلات الوردة الحمراء
+                    if (progress > 60) {
+                        let petalScale = (progress - 60) / 40;
+                        if (petalScale > 1) petalScale = 1;
+
+                        ctx.save();
+                        ctx.translate(200, 210);
+                        ctx.scale(petalScale, petalScale);
+
+                        // بتلات خلفية
+                        for (let i = 0; i < 5; i++) {
+                            ctx.beginPath();
+                            ctx.rotate((Math.PI * 2) / 5);
+                            ctx.arc(0, -35, 35, 0, Math.PI * 2);
+                            ctx.fillStyle = '#a71e34';
+                            ctx.fill();
+                        }
+
+                        // بتلات أماميّة
+                        for (let i = 0; i < 5; i++) {
+                            ctx.beginPath();
+                            ctx.rotate((Math.PI * 2) / 5);
+                            ctx.arc(0, -20, 25, 0, Math.PI * 2);
+                            ctx.fillStyle = '#ff0a54';
+                            ctx.fill();
+                        }
+
+                        // قلب الوردة
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 18, 0, Math.PI * 2);
+                        ctx.fillStyle = '#ff758f';
+                        ctx.fill();
+
+                        ctx.restore();
+                    }
+
+                    if (progress < 100) {
+                        progress += 1;
+                        requestAnimationFrame(draw);
+                    } else {
+                        // إظهار نص "احبج يا شطورتي"
+                        const finalText = document.getElementById('finalLoveText');
+                        finalText.style.display = 'block';
+                        setTimeout(() => {
+                            finalText.style.opacity = '1';
+                        }, 100);
+                    }
+                }
+
+                draw();
+            }, 800);
         }
     </script>
 </body>
