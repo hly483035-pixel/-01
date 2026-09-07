@@ -12,7 +12,7 @@
         }
 
         body {
-            background-color: #ffe6eb;
+            background: linear-gradient(135deg, #ffe6eb, #ffb3c1);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -20,29 +20,33 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            transition: background-color 1.5s ease;
+            transition: background 1.5s ease;
         }
 
-        /* القلوب التي تحوم وتدور عشوائياً */
+        /* القلوب العشوائية الأولية */
         .heart-particle {
             position: absolute;
             color: #ff4d6d;
             font-size: 22px;
             pointer-events: none;
-            transition: left 3.5s ease-in-out, top 3.5s ease-in-out, transform 3.5s ease-in-out, opacity 1.5s ease;
+            transition: left 3.5s ease-in-out, top 3.5s ease-in-out, transform 3.5s ease-in-out, opacity 1s ease;
             z-index: 1;
         }
 
         /* حاوية البطاقة */
         .container {
             width: 90%;
-            max-width: 550px;
+            max-width: 500px;
             text-align: center;
             z-index: 10;
             padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .card {
+            width: 100%;
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(10px);
             padding: 35px 25px;
@@ -51,7 +55,7 @@
             border: 2px solid #ffb3c1;
             opacity: 0;
             transform: scale(0.9);
-            transition: opacity 1s ease, transform 1s ease, border-color 1.5s ease, box-shadow 1.5s ease;
+            transition: opacity 1s ease, transform 1s ease;
             pointer-events: none;
         }
 
@@ -77,7 +81,7 @@
 
         .message-text {
             color: #590d22;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 25px;
             white-space: pre-line;
@@ -126,69 +130,80 @@
             transition: transform 0.2s ease;
         }
 
-        /* رسم الوردة */
-        #flower-canvas {
+        /* حاوية الوردة والنص لضمان التوسيط التام */
+        .flower-wrapper {
             display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             position: absolute;
-            top: 52%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #flower-canvas {
+            display: block;
+            margin: 0 auto;
         }
 
         .final-love-text {
-            display: none;
-            position: absolute;
-            top: 12%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #c9184a;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 25px rgba(255, 77, 109, 0.6);
-            z-index: 25;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 77, 109, 0.6);
             opacity: 0;
-            transition: opacity 2s ease, transform 2s ease;
+            transition: opacity 1.5s ease;
             white-space: nowrap;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
-        /* ثيمات ألوان الشاشة بين الأسطر والأسئلة */
-        body.theme-step1 { background-color: #ffe6eb; }
-        body.theme-step2 { background-color: #f3e5f5; }
-        body.theme-step2 .card { border-color: #d8b4e2; box-shadow: 0 10px 30px rgba(156, 39, 176, 0.2); }
-        body.theme-step2 .btn { background: linear-gradient(135deg, #ab47bc, #ce93d8); }
+        /* قلوب خلفية رومانسية ناعمة تتطافر */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 77, 109, 0.35);
+            font-size: 20px;
+            pointer-events: none;
+            animation: floatUp 4s infinite linear;
+            z-index: 2;
+        }
 
-        body.theme-step3 { background-color: #e3f2fd; }
-        body.theme-step3 .card { border-color: #90caf9; box-shadow: 0 10px 30px rgba(33, 150, 243, 0.2); }
-        body.theme-step3 .btn { background: linear-gradient(135deg, #42a5f5, #90caf9); }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+        }
 
-        body.theme-step4 { background-color: #fff3e0; }
-        body.theme-step4 .card { border-color: #ffcc80; box-shadow: 0 10px 30px rgba(255, 152, 0, 0.2); }
-        body.theme-step4 .btn { background: linear-gradient(135deg, #ffa726, #ffcc80); }
-
-        body.theme-step5 { background-color: #ffebee; }
-        body.theme-step5 .card { border-color: #ffab91; box-shadow: 0 10px 30px rgba(244, 67, 54, 0.2); }
-        body.theme-step5 .btn { background: linear-gradient(135deg, #ff5252, #ff8a80); }
-
-        body.theme-flower { background-color: #120309; }
+        /* ثيمات خلفية رومانسية متدرجة */
+        body.theme-step1 { background: linear-gradient(135deg, #ffe6eb, #ffb3c1); }
+        body.theme-step2 { background: linear-gradient(135deg, #f3e5f5, #e1bee7); }
+        body.theme-step3 { background: linear-gradient(135deg, #e8eaf6, #c5cae9); }
+        body.theme-step4 { background: linear-gradient(135deg, #fff0f5, #ffc0cb); }
+        body.theme-step5 { background: linear-gradient(135deg, #ffebee, #ffcdd2); }
+        body.theme-flower { background: linear-gradient(135deg, #2b0914, #5c0f28, #1a030a); }
     </style>
 </head>
 <body class="theme-step1">
 
     <div id="heart-canvas"></div>
+    <div id="bg-hearts-container"></div>
 
     <div class="container">
         <div class="card" id="mainCard">
             
-            <!-- الخطوة 1: الرسالة الأصلية + أكلمت القراءة -->
+            <!-- الخطوة 1: الرسالة الأولى -->
             <div id="step1" class="step active">
                 <div class="message-text">
 مهما ثقلت الدنيا عليج ومهما جانت قوية ف لا تنسين انو انتي مو وحدج ابد وياج رب العالمين واني من بعده هم وياج بأي وقت تحتاجين بيه شيء رأسا كليلي اني ويا اختي ع الدنيا كلها وياج حتى بالباطل قبل الحق احبج هوايه والله يريحج ويبعد عنج كل ضوجه وحزن يارب وينطيج القوه وابد لا تنسين لو العالم كله عافج ف اني موجود وياج حتلو جنت مو بالحياة ف اني وياج هم ♥️🌹
                 </div>
-                <button class="btn" onclick="goToStep(2, 'theme-step2')">أكملت القراءة</button>
+                <button class="btn" onclick="goToStep(2, 'theme-step2', true)">أكملت القراءة</button>
             </div>
 
-            <!-- الخطوة 2: احنا اقوياء ؟ + صح -->
+            <!-- الخطوة 2: احنا اقوياء ؟ -->
             <div id="step2" class="step">
                 <div class="question-text">احنا اقوياء ؟</div>
                 <button class="btn" onclick="goToStep(3, 'theme-step3')">صح</button>
@@ -202,7 +217,7 @@
                 <button class="btn" onclick="goToStep(4, 'theme-step4')">التالي</button>
             </div>
 
-            <!-- الخطوة 4: تردين ورده ؟ + نعم ولا -->
+            <!-- الخطوة 4: تردين ورده ؟ -->
             <div id="step4" class="step">
                 <div class="question-text">تردين ورده ؟ 🌹</div>
                 <div class="btn-container">
@@ -211,7 +226,7 @@
                 </div>
             </div>
 
-            <!-- الخطوة 5: نو نوو نو الورده ببوسه + امححح -->
+            <!-- الخطوة 5: نو نوو نو الورده ببوسه -->
             <div id="step5" class="step">
                 <div class="question-text">نو نوو نو الورده ببوسه 💋</div>
                 <button class="btn" onclick="startFlowerDrawing()">امححح</button>
@@ -220,9 +235,11 @@
         </div>
     </div>
 
-    <!-- رسم الوردة والرسالة الأخيرة -->
-    <canvas id="flower-canvas" width="450" height="550"></canvas>
-    <div class="final-love-text" id="finalLoveText">احبج يا شطورتي ❤️🌹</div>
+    <!-- حاوية الوردة والنص المتناسقين بالمنتصف -->
+    <div class="flower-wrapper" id="flowerWrapper">
+        <div class="final-love-text" id="finalLoveText">احبج يا شطورتي ❤️🌹</div>
+        <canvas id="flower-canvas" width="350" height="420"></canvas>
+    </div>
 
     <script>
         const canvas = document.getElementById('heart-canvas');
@@ -245,7 +262,7 @@
             hearts.push(heart);
         }
 
-        // حركة عشوائية مستمرة للقلوب
+        // تحريك القلوب عشوائياً
         function moveHeartsRandomly() {
             hearts.forEach(heart => {
                 const randomX = Math.random() * (window.innerWidth - 40);
@@ -261,7 +278,7 @@
         moveHeartsRandomly();
         const randomInterval = setInterval(moveHeartsRandomly, 3000);
 
-        // شكل القلب الكبير
+        // حساب شكل القلب الكبير
         function getHeartPosition(t) {
             const scale = 11;
             const x = 16 * Math.pow(Math.sin(t), 3);
@@ -269,7 +286,7 @@
             return { x: x * scale, y: y * scale };
         }
 
-        // انضمام القلوب إلى شكل القلب الكبير
+        // انضمام القلوب
         setTimeout(() => {
             clearInterval(randomInterval);
             const centerX = window.innerWidth / 2;
@@ -290,8 +307,36 @@
 
         }, 5000);
 
-        // التبديل بين الشاشات وتغيير الثيم والألوان
-        function goToStep(stepNumber, themeClass) {
+        // إخفاء القلوب بالكامل
+        function removeBigHeart() {
+            hearts.forEach(h => {
+                h.style.opacity = '0';
+                setTimeout(() => h.remove(), 1000);
+            });
+            startBackgroundHearts();
+        }
+
+        // إنشاء قلوب متطايرة رومانسية بالخلفية
+        function startBackgroundHearts() {
+            const container = document.getElementById('bg-hearts-container');
+            setInterval(() => {
+                const bgHeart = document.createElement('div');
+                bgHeart.classList.add('bg-heart');
+                bgHeart.innerHTML = '💖';
+                bgHeart.style.left = Math.random() * 100 + 'vw';
+                bgHeart.style.top = '100vh';
+                bgHeart.style.animationDuration = (3 + Math.random() * 3) + 's';
+                container.appendChild(bgHeart);
+                setTimeout(() => bgHeart.remove(), 6000);
+            }, 400);
+        }
+
+        // التبديل بين الشاشات
+        function goToStep(stepNumber, themeClass, isFirstStep = false) {
+            if (isFirstStep) {
+                removeBigHeart(); // مسح وتطير القلب الكبير عند الضغط لأول مرة
+            }
+
             const currentActive = document.querySelector('.step.active');
             currentActive.style.opacity = '0';
             currentActive.style.transform = 'translateY(-10px)';
@@ -310,7 +355,7 @@
             }, 500);
         }
 
-        // جعل زر "لا" يهرب بشكل فكاهي
+        // هروب زر "لا"
         function moveNoBtn() {
             const btn = document.getElementById('noBtn');
             const x = Math.random() * 160 - 80;
@@ -318,19 +363,18 @@
             btn.style.transform = `translate(${x}px, ${y}px)`;
         }
 
-        // رسم الوردة بطريقة بطيئة وجميلة جداً
+        // رسم الوردة المتناسقة
         function startFlowerDrawing() {
             document.getElementById('mainCard').style.opacity = '0';
-            
-            // إخفاء القلوب تدريجياً لترك الميدان للوردة
-            hearts.forEach(h => h.style.opacity = '0');
 
             setTimeout(() => {
                 document.getElementById('mainCard').style.display = 'none';
                 document.body.className = 'theme-flower';
                 
+                const wrapper = document.getElementById('flowerWrapper');
+                wrapper.style.display = 'flex';
+                
                 const fCanvas = document.getElementById('flower-canvas');
-                fCanvas.style.display = 'block';
                 const ctx = fCanvas.getContext('2d');
 
                 let progress = 0;
@@ -338,63 +382,63 @@
                 function drawSlowFlower() {
                     ctx.clearRect(0, 0, fCanvas.width, fCanvas.height);
                     
-                    // 1. نمو الساق الأخضر ببطء (من progress 0 إلى 150)
+                    // 1. نمو الساق الأخضر (من المركز)
                     if (progress > 0) {
                         ctx.beginPath();
-                        ctx.moveTo(225, 480);
-                        let currentStemY = 480 - (Math.min(progress, 150) * 1.6);
-                        ctx.quadraticCurveTo(210, 370, 225, currentStemY);
+                        ctx.moveTo(175, 380);
+                        let currentStemY = 380 - (Math.min(progress, 150) * 1.3);
+                        ctx.quadraticCurveTo(160, 290, 175, currentStemY);
                         ctx.strokeStyle = '#38b000';
-                        ctx.lineWidth = 7;
+                        ctx.lineWidth = 6;
                         ctx.lineCap = 'round';
                         ctx.stroke();
                     }
 
-                    // 2. نمو الأوراق الخضراء (من progress 100 إلى 220)
+                    // 2. نمو الأوراق الخضراء
                     if (progress > 100) {
                         let leafScale = Math.min((progress - 100) / 120, 1);
                         
                         // ورقة يسار
                         ctx.save();
-                        ctx.translate(220, 370);
+                        ctx.translate(170, 290);
                         ctx.scale(leafScale, leafScale);
                         ctx.beginPath();
                         ctx.moveTo(0, 0);
-                        ctx.quadraticCurveTo(-70, -30, -60, 20);
-                        ctx.quadraticCurveTo(-20, 30, 0, 0);
+                        ctx.quadraticCurveTo(-50, -25, -45, 15);
+                        ctx.quadraticCurveTo(-15, 25, 0, 0);
                         ctx.fillStyle = '#70e000';
                         ctx.fill();
                         ctx.restore();
 
                         // ورقة يمين
                         ctx.save();
-                        ctx.translate(230, 330);
+                        ctx.translate(180, 260);
                         ctx.scale(leafScale, leafScale);
                         ctx.beginPath();
                         ctx.moveTo(0, 0);
-                        ctx.quadraticCurveTo(70, -30, 60, 20);
-                        ctx.quadraticCurveTo(20, 30, 0, 0);
+                        ctx.quadraticCurveTo(50, -25, 45, 15);
+                        ctx.quadraticCurveTo(15, 25, 0, 0);
                         ctx.fillStyle = '#70e000';
                         ctx.fill();
                         ctx.restore();
                     }
 
-                    // 3. تفتح البتلات ببطء شديد وبشكل متدرج (من progress 200 إلى 450)
+                    // 3. تفتح بتلات الوردة الحمراء
                     if (progress > 200) {
                         let bloomProgress = Math.min((progress - 200) / 250, 1);
 
                         ctx.save();
-                        ctx.translate(225, 240);
+                        ctx.translate(175, 185);
 
                         // الطبقة الخارجية
                         const outerPetals = 6;
                         for (let i = 0; i < outerPetals; i++) {
                             ctx.beginPath();
                             let angle = (i * Math.PI * 2) / outerPetals;
-                            let px = Math.cos(angle) * (38 * bloomProgress);
-                            let py = Math.sin(angle) * (38 * bloomProgress);
-                            ctx.arc(px, py, 32 * bloomProgress, 0, Math.PI * 2);
-                            ctx.fillStyle = 'rgba(157, 2, 8, 0.9)';
+                            let px = Math.cos(angle) * (32 * bloomProgress);
+                            let py = Math.sin(angle) * (32 * bloomProgress);
+                            ctx.arc(px, py, 28 * bloomProgress, 0, Math.PI * 2);
+                            ctx.fillStyle = 'rgba(186, 24, 27, 0.95)';
                             ctx.fill();
                         }
 
@@ -405,49 +449,45 @@
                             for (let i = 0; i < midPetals; i++) {
                                 ctx.beginPath();
                                 let angle = (i * Math.PI * 2) / midPetals + 0.5;
-                                let px = Math.cos(angle) * (22 * midProgress);
-                                let py = Math.sin(angle) * (22 * midProgress);
-                                ctx.arc(px, py, 24 * midProgress, 0, Math.PI * 2);
-                                ctx.fillStyle = '#d00000';
+                                let px = Math.cos(angle) * (18 * midProgress);
+                                let py = Math.sin(angle) * (18 * midProgress);
+                                ctx.arc(px, py, 20 * midProgress, 0, Math.PI * 2);
+                                ctx.fillStyle = '#e63946';
                                 ctx.fill();
                             }
                         }
 
-                        // الطبقة الداخلية والبراعم
+                        // الطبقة الداخلية
                         if (progress > 320) {
                             let innerProgress = Math.min((progress - 320) / 130, 1);
                             const innerPetals = 4;
                             for (let i = 0; i < innerPetals; i++) {
                                 ctx.beginPath();
                                 let angle = (i * Math.PI * 2) / innerPetals + 0.2;
-                                let px = Math.cos(angle) * (12 * innerProgress);
-                                let py = Math.sin(angle) * (12 * innerProgress);
-                                ctx.arc(px, py, 16 * innerProgress, 0, Math.PI * 2);
-                                ctx.fillStyle = '#ff0054';
+                                let px = Math.cos(angle) * (10 * innerProgress);
+                                let py = Math.sin(angle) * (10 * innerProgress);
+                                ctx.arc(px, py, 14 * innerProgress, 0, Math.PI * 2);
+                                ctx.fillStyle = '#ff4d6d';
                                 ctx.fill();
                             }
 
-                            // قلب الوردة اللامع
+                            // قلب الوردة
                             ctx.beginPath();
-                            ctx.arc(0, 0, 10 * innerProgress, 0, Math.PI * 2);
-                            ctx.fillStyle = '#ff758f';
+                            ctx.arc(0, 0, 8 * innerProgress, 0, Math.PI * 2);
+                            ctx.fillStyle = '#ffb3c1';
                             ctx.fill();
                         }
 
                         ctx.restore();
                     }
 
-                    // التحكم في سرعة رسم الوردة البطئية والجميلة
                     if (progress < 450) {
                         progress += 1;
                         requestAnimationFrame(drawSlowFlower);
                     } else {
-                        // إظهار كلمة احبج يا شطورتي بخلفية جميلة
+                        // إظهار كلمة احبج يا شطورتي بوضوح فوق الوردة
                         const finalText = document.getElementById('finalLoveText');
-                        finalText.style.display = 'block';
-                        setTimeout(() => {
-                            finalText.style.opacity = '1';
-                        }, 200);
+                        finalText.style.opacity = '1';
                     }
                 }
 
